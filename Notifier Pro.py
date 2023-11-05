@@ -9,7 +9,6 @@ from shutil import copyfileobj
 import tkinter as tk
 from tkinter import messagebox
 from tkcalendar import Calendar
-from time import sleep
 
 selected_task_index = None
 iteration_count = 0
@@ -46,7 +45,6 @@ def selectdate():
             date_select_root.destroy()
             return f"{dateforsechduling}.txt"
 
-
     date_select_root = tk.Tk()
     date_select_root.title("Date Selection App")
 
@@ -69,6 +67,7 @@ def selectdate():
     date_select_root.mainloop()
 
     return f"{cal.get_date()}.txt"
+
 
 def transfertask():
     try:
@@ -98,8 +97,10 @@ def transfertask():
     except Exception as e:
         print(f"Error in transfertask: {e}")
 
-def tommrow_task_app():
+
+def tomorrow_task_app():
     date_file = str(selectdate())
+
     def save_tasks(file_name=date_file):
         with open(file_name, "w") as file:
             tasks = listbox1.get(0, END)
@@ -170,7 +171,7 @@ def notify_task():
 
 def update_date():
     transfertask()
-    global today,yesterday
+    global today, yesterday
     today = f"{(datetime.date.today())}.txt"
     yesterday = f"{(datetime.date.today()) - datetime.timedelta(days=1)}.txt"
     current_date = datetime.datetime.now().strftime('%Y-%m-%d')
@@ -242,7 +243,7 @@ def main_app():
     listbox.bind("<ButtonRelease-1>", toggle_task_done)
     CTkButton(root, text='Add task', command=add_task).grid(pady=10, row=12, column=0)
     CTkButton(root, text='Delete task', command=delete_task).grid(row=12, column=1)
-    CTkButton(root, text='Choose Date', command=tommrow_task_app).grid(column=2,row=12)
+    CTkButton(root, text='Choose Date', command=tomorrow_task_app).grid(column=2, row=12)
     date_label = CTkLabel(root, font=("arial", 20), fg_color='#145369', text_color="white", corner_radius=10)
     date_label.grid(row=0, column=2, padx=30)
     update_date()
