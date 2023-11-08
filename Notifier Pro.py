@@ -14,6 +14,11 @@ selected_task_index = None
 iteration_count = 0
 today = f"{(datetime.date.today())}.txt"
 yesterday = f"{(datetime.date.today()) - datetime.timedelta(days=1)}.txt"
+Tomorrow = f"{(datetime.date.today()) + datetime.timedelta(days=1)}.txt"
+
+
+def tomorrow_task():
+    tomorrow_task_app(Tomorrow)
 
 
 def selectdate():
@@ -98,9 +103,11 @@ def transfertask():
         print(f"Error in transfertask: {e}")
 
 
-def tomorrow_task_app():
-    date_file = str(selectdate())
-
+def tomorrow_task_app(datee="Nothing"):
+    if datee == "Nothing":
+        date_file = str(selectdate())
+    else:
+        date_file = datee
     def save_tasks(file_name=date_file):
         with open(file_name, "w") as file:
             tasks = listbox1.get(0, END)
@@ -174,6 +181,7 @@ def update_date():
     global today, yesterday
     today = f"{(datetime.date.today())}.txt"
     yesterday = f"{(datetime.date.today()) - datetime.timedelta(days=1)}.txt"
+    Tomorrow = f"{(datetime.date.today()) + datetime.timedelta(days=1)}.txt"
     current_date = datetime.datetime.now().strftime('%Y-%m-%d')
     current_time = time.strftime('%H:%M:%S')
     date_label.configure(text=f"{current_date} ~ {current_time}")
@@ -244,6 +252,7 @@ def main_app():
     CTkButton(root, text='Add task', command=add_task).grid(pady=10, row=12, column=0)
     CTkButton(root, text='Delete task', command=delete_task).grid(row=12, column=1)
     CTkButton(root, text='Choose Date', command=tomorrow_task_app).grid(column=2, row=12)
+    CTkButton(root, text='Tomorrow Task', command=tomorrow_task).grid(column=2, row=11)
     date_label = CTkLabel(root, font=("arial", 20), fg_color='#145369', text_color="white", corner_radius=10)
     date_label.grid(row=0, column=2, padx=30)
     update_date()
@@ -257,4 +266,4 @@ if __name__ == '__main__':
     m2 = multiprocessing.Process(target=notify_task)
     m3.start()
     m1.start()
-    m2.start()
+    # m2.start()
