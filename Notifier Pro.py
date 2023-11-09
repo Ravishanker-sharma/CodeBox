@@ -12,7 +12,7 @@ from tkcalendar import Calendar
 from time import sleep
 
 selected_task_index = None
-
+iteration_count = 0
 today = f"{(datetime.date.today())}.txt"
 yesterday = f"{(datetime.date.today()) - datetime.timedelta(days=1)}.txt"
 
@@ -71,28 +71,32 @@ def selectdate():
     return f"{cal.get_date()}.txt"
 
 def transfertask():
-    if not os.path.exists("Startfile"):
-        with open("Startfile", 'w') as f:
-            f.write("")
-        with open(today, 'w') as h:
-            h.write("")
+    try:
+        if not os.path.exists("Startfile"):
+            with open("Startfile", 'w') as f:
+                f.write("")
+            with open(today, 'w') as h:
+                h.write("")
 
-    else:
-        if os.path.exists(yesterday):
-            if os.path.exists(today):
-                with open(yesterday, "rb") as src, open(today, "ab") as dest:
-                    copyfileobj(src, dest)
-                os.remove(yesterday)
-            else:
-                with open(today, 'w') as h:
-                    h.write("")
-                with open(yesterday, "rb") as src, open(today, "ab") as dest:
-                    copyfileobj(src, dest)
-                os.remove(yesterday)
+        else:
+            if os.path.exists(yesterday):
+                if os.path.exists(today):
+                    load_tasks(today)
+                    with open(yesterday, "rb") as src, open(today, "ab") as dest:
+                        copyfileobj(src, dest)
 
-    sleep(1)
-    transfertask()
+                    os.remove(yesterday)
 
+                else:
+                    load_tasks(today)
+                    with open(today, 'w') as h:
+                        h.write("")
+                    with open(yesterday, "rb") as src, open(today, "ab") as dest:
+                        copyfileobj(src, dest)
+                    os.remove(yesterday)
+
+    except Exception as e:
+        print(f"Error in transfertask: {e}")
 
 def tommrow_task_app():
     date_file = str(selectdate())
@@ -165,6 +169,7 @@ def notify_task():
 
 
 def update_date():
+    transfertask()
     global today,yesterday
     today = f"{(datetime.date.today())}.txt"
     yesterday = f"{(datetime.date.today()) - datetime.timedelta(days=1)}.txt"
@@ -237,7 +242,7 @@ def main_app():
     listbox.bind("<ButtonRelease-1>", toggle_task_done)
     CTkButton(root, text='Add task', command=add_task).grid(pady=10, row=12, column=0)
     CTkButton(root, text='Delete task', command=delete_task).grid(row=12, column=1)
-    CTkButton(root, text='''Tomorrow's Task''', command=tommrow_task_app).grid(column=2)
+    CTkButton(root, text='Choose Date', command=tommrow_task_app).grid(column=2,row=12)
     date_label = CTkLabel(root, font=("arial", 20), fg_color='#145369', text_color="white", corner_radius=10)
     date_label.grid(row=0, column=2, padx=30)
     update_date()
