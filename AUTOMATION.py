@@ -255,8 +255,8 @@ if __name__ == '__main__':
                 add_audio_to_video(text_written_video, pathofaudio, output_video)
                 print("OUTPUT VIDEO COMPILED!!!")
                 time.sleep(5)
-                username = 'everydaynewscommunity@gmail.com'
-                password = 'n1e2w3s4'
+                username = ''
+                password = ''
                 heading = heading[0:50]
                 try:
                     uploadvideo(heading,output_video,username,password)
